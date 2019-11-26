@@ -1,8 +1,16 @@
 # vscode-paste-image-to-qiniu
 
+克隆项目至[vscode-qiniu-upload-image](https://github.com/favers/vscode-qiniu-upload-image)
+
 一个可以支持截图粘贴上传图片到七牛、让你写用vscode写markdown有更好的体验。
 
 ![screenshot](./screenshot/screenshot.gif)
+
+主要更新如下：
+1. 升级dependencies为最新（2019-11-26）。
+2. 增加七牛云zone配置项，默认为"Zone_z1"。
+3. 新增选项delLocalPath，设置是否删除本地文件，默认为true。
+4. 优化上传到七牛云文件路径为相对于工作空间目录的位置。
 
 ## 安装
 输入命令：
@@ -14,26 +22,32 @@ ext install paste-image-to-qiniu
 ## 参数设置
 ```js
 {
-    // 有效的七牛 AccessKey 签名授权
+    // 七牛云AccessKey
     "pasteImageToQiniu.access_key": "*****************************************",
 
-    // 有效的七牛 SecretKey 签名授权
+    // 七牛云SecretKey
     "pasteImageToQiniu.secret_key": "*****************************************",
 
-    // 七牛图片上传空间
+    // 七牛云图片上传空间
     "pasteImageToQiniu.bucket": "blog",
 
-    // 七牛图片上传路径，参数化命名，暂时支持 ${fileName}、${mdFileName}、${date}、${dateTime}
+    // 七牛云空间对应的机房
+    "pasteImageToQiniu.zone": "Zone_z1",
+
+    // 七牛云图片上传路径，参数化命名，支持 ${fileName}、${filePath}、${date}、${dateTime}、${year}、${month}、${day}
     // 示例：
     //   ${fileName}-${date} -> picName-20160725.jpg
-    //   ${mdFileName}-${dateTime} -> markdownName-20170412222810.jpg
-    "pasteImageToQiniu.remotePath": "${fileName}",
+    //   ${filePath}-${dateTime} -> markdownfilepath-20170412222810.jpg
+    "pasteImageToQiniu.remotePath": "{filePath}/${fileName}",
 
     // 七牛图床域名
     "pasteImageToQiniu.domain": "http://xxxxx.xxxx.com",
 
-    // 本地储存位置
-    "pasteImageToQiniu.localPath":"./img"
+    // 上传图片时本地保存位置
+    "pasteImageToQiniu.localPath":"./img",
+
+    // 上传完成后是否删除本地保存文件
+    "pasteImageToQiniu.delLocalPath": true
 }
 ```
 

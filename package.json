@@ -1,23 +1,23 @@
 {
   "name": "paste-image-to-qiniu",
-  "displayName": "paste image to qiniu",
-  "description": "截图上传七牛云插件",
-  "version": "0.0.1",
-  "publisher": "favers",
+  "displayName": "vscode paste image to qiniu",
+  "description": "vscode 粘贴图片上传到七牛云插件",
+  "version": "0.3.0",
+  "publisher": "RainingNight",
   "author": {
-    "name": "favers",
-    "email": "favers0601@gmail.com"
+    "name": "RainingNight",
+    "email": "yuye2016@gmail.com"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/favers/vscode-qiniu-upload-image.git"
+    "url": "https://github.com/RainingNight/vscode-qiniu-upload-image.git"
   },
-  "homepage": "https://github.com/favers/vscode-qiniu-upload-image/blob/master/README.md",
+  "homepage": "https://github.com/RainingNight/vscode-qiniu-upload-image/blob/master/README.md",
   "bugs": {
-    "url": "https://github.com/favers/vscode-qiniu-upload-image/issues"
+    "url": "https://github.com/RainingNight/vscode-qiniu-upload-image/issues"
   },
   "engines": {
-    "vscode": "^1.11.0"
+    "vscode": "^1.34.0"
   },
   "categories": [
     "Other"
@@ -48,22 +48,27 @@
         "pasteImageToQiniu.access_key": {
           "type": "string",
           "default": "",
-          "description": "一个有效的七牛 AccessKey 签名授权。"
+          "description": "七牛云AccessKey"
         },
         "pasteImageToQiniu.secret_key": {
           "type": "string",
           "default": "",
-          "description": "一个有效的七牛 SecretKey 签名授权。"
+          "description": "七牛云SecretKey"
         },
         "pasteImageToQiniu.bucket": {
           "type": "string",
           "default": "",
-          "description": "七牛图片上传空间。"
+          "description": "七牛云图片上传空间"
+        },
+        "pasteImageToQiniu.zone": {
+          "type": "string",
+          "default": "Zone_z1",
+          "description": "七牛云空间对应的机房"
         },
         "pasteImageToQiniu.remotePath": {
           "type": "string",
           "default": "${fileName}",
-          "description": "七牛图片上传路径，参数化命名。"
+          "description": "七牛云图片上传路径，参数化命名"
         },
         "pasteImageToQiniu.domain": {
           "type": "string",
@@ -73,7 +78,12 @@
         "pasteImageToQiniu.localPath": {
           "type": "string",
           "default": "./img",
-          "description": "图片本地保存位置"
+          "description": "上传图片时本地保存位置"
+        },
+        "pasteImageToQiniu.delLocalPath": {
+          "type": "boolean",
+          "default": "true",
+          "description": "上传完成后是否删除本地保存文件"
         }
       }
     }
@@ -83,15 +93,15 @@
     "test": "node ./node_modules/vscode/bin/test"
   },
   "devDependencies": {
-    "typescript": "^2.0.3",
-    "vscode": "^1.0.0",
-    "mocha": "^2.3.3",
-    "eslint": "^3.6.0",
-    "@types/node": "^6.0.40",
-    "@types/mocha": "^2.2.32"
+    "typescript": "^3.7.2",
+    "vscode": "^1.1.36",
+    "mocha": "^6.2.2",
+    "eslint": "^6.7.1",
+    "@types/node": "^12.12.14",
+    "@types/mocha": "^5.2.7"
   },
   "dependencies": {
-    "moment": "^2.18.1",
-    "qiniu": "^6.1.13"
+    "moment": "^2.24.0",
+    "qiniu": "^7.2.2"
   }
 }

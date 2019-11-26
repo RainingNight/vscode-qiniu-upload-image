@@ -30,8 +30,8 @@ function start() {
 
     let selection = editor.selection;
     let selectText = editor.document.getText(selection);
-
-    if (selectText && !/^[\w\-.]+$/.test(selectText)) {
+    selectText = selectText.replace(new RegExp(' ', 'g'), '-');
+    if (selectText && !/^[\w\-_.]+$/.test(selectText)) {
         vscode.window.showInformationMessage('Your selection is not a valid file name!');
         return;
     }
@@ -43,11 +43,15 @@ function start() {
     }
 
     let filePath = fileUri.fsPath;
-    let imagePath = getImagePath(filePath, selectText, localPath);
-    const mdFilePath = editor.document.fileName;
-    const mdFileName = path.basename(mdFilePath, path.extname(mdFilePath));
+    let imagelocalPath = getImagePath(filePath, selectText, localPath);
 
-    createImageDirWithImagePath(imagePath).then(imagePath => {
+    let mdFilePath = editor.document.fileName;
+    if (vscode.workspace.workspaceFolders.length > 0) {
+        mdFilePath = mdFilePath.slice(vscode.workspace.workspaceFolders[0].uri.path.length + 1, mdFilePath.length - path.extname(mdFilePath).length);
+        mdFilePath = mdFilePath.replace(new RegExp('\\\\', 'g'), '/');
+    }
+
+    createImageDirWithImagePath(imagelocalPath).then(imagePath => {
         saveClipboardImageToFileAndGetPath(imagePath, (imagePath) => {
             if (!imagePath) return;
             if (imagePath === 'no image') {
@@ -58,10 +62,19 @@ function start() {
                 vscode.window.showInformationMessage('上传成功');
                 const img = `![${name}](${url})`;
                 editor.edit(textEditorEdit => {
+                    textEditorEdit.delete(editor.selection);
                     textEditorEdit.insert(editor.selection.active, img)
                 });
+                // 是否删除本地文件
+                if (config.delLocalPath) {
+                    fs.unlink(imagePath, function (err) {
+                        if (err) {
+                            vscode.window.showErrorMessage('Delete temp file "' + imagePath + '" error: ' + err.toString());
+                        }
+                    })
+                }
             }).catch((err) => {
-                vscode.window.showErrorMessage('Upload error.');
+                vscode.window.showErrorMessage('Upload error.' + err.message);
             });
         });
     }).catch(err => {
@@ -74,7 +87,7 @@ function getImagePath(filePath, selectText, localPath) {
     // 图片名称
     let imageFileName = '';
     if (!selectText) {
-        imageFileName = moment().format("Y-MM-DD-HH-mm-ss") + '.png';
+        imageFileName = moment().format("YMMDDHHmmss") + '.png';
     } else {
         imageFileName = selectText + '.png';
     }
@@ -138,7 +151,7 @@ function saveClipboardImageToFileAndGetPath(imagePath, cb) {
 
         let ascript = spawn('osascript', [scriptPath, imagePath]);
         ascript.on('exit', function (code, signal) {
-            
+
         });
 
         ascript.stdout.on('data', function (data) {
@@ -151,7 +164,7 @@ function saveClipboardImageToFileAndGetPath(imagePath, cb) {
 
         let ascript = spawn('sh', [scriptPath, imagePath]);
         ascript.on('exit', function (code, signal) {
-            
+
         });
 
         ascript.stdout.on('data', function (data) {
